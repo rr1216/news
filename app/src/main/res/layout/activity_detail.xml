@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--使用 CoordinatorLayout + AppBarLayout + app:layout_scrollFlags +  app:layout_behavior 实现标题栏与WevView的联动效果-->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/detail_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#1976D2"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+            app:layout_scrollFlags="scroll|enterAlways|snap">
+            <!-- android:layout_gravity="center" 水平居中 + 垂直居中-->
+            <TextView
+                android:id="@+id/detail_real_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="居中的标题"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.app.custom.NestedScrollWebView
+        android:id="@+id/news_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+
+    </com.app.custom.NestedScrollWebView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
