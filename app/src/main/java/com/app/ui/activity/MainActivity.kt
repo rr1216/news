@@ -9,13 +9,14 @@ import androidx.viewpager.widget.ViewPager
 import com.app.R
 import com.app.ui.fragment.HomeFragment
 import com.app.ui.fragment.TestFragment
+import com.app.ui.fragment.VideoFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     val fragmentList = listOf(
         HomeFragment(),
-        TestFragment("测试页面一    你好世界"),
+        VideoFragment(),
         TestFragment("第二个测试页面     2021"),
         TestFragment("第3个测试       一切会更好")
     )
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 // smoothScroll=false这个参数能解决切换时的多页闪烁问题
                 R.id.nav_home -> contentViewPager.setCurrentItem(0, false)
-                R.id.nav_test_1 -> contentViewPager.setCurrentItem(1, false)
+                R.id.nav_video -> contentViewPager.setCurrentItem(1, false)
                 R.id.nav_test_2 -> contentViewPager.setCurrentItem(2, false)
                 R.id.nav_test_3 -> contentViewPager.setCurrentItem(3, false)
             }

@@ -8,8 +8,8 @@
     </item>
     <item
         android:icon="@drawable/ic_test"
-        android:id="@+id/nav_test_1"
-        android:title="视频(待开发)">
+        android:id="@+id/nav_video"
+        android:title="视频(开发ing)">
     </item>
     <item
         android:icon="@drawable/ic_test"
