@@ -10,11 +10,13 @@ import androidx.core.view.MotionEventCompat
 import androidx.core.view.NestedScrollingChildHelper
 import androidx.core.view.NestedScrollingChild
 
-// 自定义的 WebView
+//  自定义的 WebView
 
 //  原因  https://blog.csdn.net/weixiao1999/article/details/66974699
 
-// 参考自  https://github.com/tobiasrohloff/NestedScrollWebView.git
+//  参考自  https://github.com/tobiasrohloff/NestedScrollWebView.git
+
+//  影响用户体验，已弃用
 
 class NestedScrollWebView : WebView, NestedScrollingChild {
     private var mLastMotionY = 0

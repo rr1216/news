@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.app.R
+import android.view.Menu
+
 
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +18,7 @@ class DetailActivity : AppCompatActivity() {
         // 设置标题栏
         val toolbar = findViewById<Toolbar>(R.id.detail_tool_bar)
         setSupportActionBar(toolbar)
+
         // 去掉默认的标题
         title = ""
         // 设置标题的居中文字
@@ -30,6 +33,13 @@ class DetailActivity : AppCompatActivity() {
         if (url != null) {
             webView.loadUrl(url)
         }
+    }
+
+    // 给Activity加载标题栏的菜单项
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        //写一个menu的资源文件.然后创建就行了.
+        menuInflater.inflate(R.menu.detail_tool_bar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     //给系统自带的home按钮(小箭头)添加点击事件：销毁本页面返回上一级
