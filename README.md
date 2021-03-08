@@ -7,7 +7,7 @@ git clone https://github.com/hjzf/news.git
 
 ![效果图见README.assets/test.png](https://gitee.com/ashinigit/news/raw/main/README.assets/test.png)
 
-![视频播放Demo效果图见README.assets/test_1.jpg](https://gitee.com/ashinigit/news/raw/main/README.assets/test_1.jpg)
+![视频播放Demo效果图见README.assets/test_1.jpg](https://gitee.com/ashinigit/news/raw/main/README.assets/test_1.png)
 
 ## 开发思路:
 #### 1.设计的缺陷: 只能显示一条新闻(即写在布局文件中的那一条特定的新闻)
