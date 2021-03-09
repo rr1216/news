@@ -75,10 +75,10 @@ A: 方案一 ，使用 ViewPager.setCurrentItem(0, false)       代替     ViewP
 
 Q: **如何去掉点击时的水波纹动画效果？**  
 A: 基本思路是将背景色设置为透明色。  
-去掉TabLayout的水波纹效果app:tabRippleColor="@color/transparent"      
+ - 去掉TabLayout的水波纹效果app:tabRippleColor="@color/transparent"      
 （其中transparent是定义的透明色）      
-去掉BottomNavigationView的水波纹效果app:itemRippleColor="@color/transparent"   
-去掉标题栏的menu的水波纹效果 :
+ - 去掉BottomNavigationView的水波纹效果app:itemRippleColor="@color/transparent"   
+ - 去掉标题栏的menu的水波纹效果 :
 
 ```
 <!--设置菜单项的水波纹颜色为透明 v21以上有效，见src/main/res/values-v21/themes.xml-->
@@ -88,7 +88,9 @@ A: 基本思路是将背景色设置为透明色。
 
 
 Q: **如何在RecyclerView中展示多种菜单项，比如有三张图片的新闻列表项？**  
-A:在适配器中重写getItemViewType(position: Int)函数，判断第position条新闻应该用哪一种列表项展示，返回viewType常量，在 onCreateViewHolder 中 根据不同的viewType加载不同的列表项布局并创建对应类型的ViewHolder ，最后在onBindViewHolder 中根据不同的ViewHolder类型进行数据绑定 。    
+A: 1. 在适配器中重写getItemViewType(position: Int)函数，判断第position条新闻应该用哪一种列表项展示，返回viewType常量，  
+ 2. 在 onCreateViewHolder 中 根据不同的viewType加载不同的列表项布局并创建对应类型的ViewHolder ，  
+ 3. 最后在onBindViewHolder 中根据不同的ViewHolder类型进行数据绑定 。    
 
 
 
@@ -99,14 +101,27 @@ A: 添加属性  app:tabMode="scrollable"  让标签栏能横向滑动
 
 
 Q: **如何实现BiliBili安卓客户端的上滑自动隐藏标题栏效果？**  
-A: 使用 CoordinatorLayout + AppBarLayout + app:layout_scrollFlags +  app:layout_behavior 实现标题栏与新闻列表的联动效果
+A: 使用 CoordinatorLayout + AppBarLayout + app:layout_scrollFlags +  app:layout_behavior 实现标题栏与新闻列表的联动效果    
 
 
 
+Q: **如何播放视频？**  
+A: android 原生的 VideoView 控件,我在第二个测试页面写了一个VideoView的demo，或者开源库 https://github.com/google/ExoPlayer.git      
 
-Q: **如何播放视频？**
-A: android 原生的 VideoView 控件，或者开源库 https://github.com/google/ExoPlayer.git
 
+
+Q: **如何使用数据库缓存数据? **  
+A: android可以使用SQLite数据库储存一些关系型的数据。  
+这里尝试使用了郭神的开源库 LitePal 简化数据库的操作 ，见   https://github.com/guolindev/LitePal.git 详细的中文文档     https://blog.csdn.net/guolin_blog/category_9262963.html    
+使用非常方便，个人感觉比Room的开发体验还要好，强烈推荐，（注意：部分API发生了变化例如DataSupport  改成了  LitePalSupport   
+同时尝试了一下郭神的Glance项目 https://github.com/guolindev/Glance.git     
+
+
+
+Q: **这个新闻App还有什么可以实现的? **     
+A:由于缺乏后端支持，很多功能都实现不了，只能写一下界面。但是可以利用SQLite数据库实现一些本地功能例如浏览历史记录，其它更复杂的功能可以尝试写一下后端代码。  
+这个App用到的技术都挺基础的，可以尝试用一下其它知识，例如用retrofit替换Okhttp，用其它方式实现底部导航栏页面切换功能，使用LiveData,...或者整个改成MVVM架构          
+下次重构打算尝试一下 Jetpack Compose ，继续努力吧      
 
 
 
