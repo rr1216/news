@@ -20,7 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="视频播放测试"
+                android:text="本地视频播放测试"
                 android:textColor="#ffffff"
                 android:textSize="20sp" />
 
@@ -43,15 +43,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="视频资源文件路径:" />
-
+            android:text="不带拓展名的视频文件标题:" />
+        <!--android:text="movie" 测试用的文件名是 movie.mp4-->
         <EditText
-            android:id="@+id/video_path"
+            android:id="@+id/file_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:gravity="center"
-            android:text="/Pictures/movie.mp4" />
+            android:text="movie" />
 
     </LinearLayout>
 

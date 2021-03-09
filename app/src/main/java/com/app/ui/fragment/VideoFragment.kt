@@ -3,7 +3,7 @@ package com.app.ui.fragment
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ import com.app.R
 import com.app.util.showToast
 import java.lang.StringBuilder
 
-
+// 一个 VideoView 的 demo
 class VideoFragment : Fragment() {
 
     private lateinit var videoView: VideoView
@@ -23,7 +23,7 @@ class VideoFragment : Fragment() {
     private lateinit var playBtn: Button
     private lateinit var pauseBtn: Button
     private lateinit var replayBtn: Button
-    private lateinit var videoPath: EditText
+    private lateinit var fileTitle: EditText
     private lateinit var videoPathIsPlaying: TextView
 
     override fun onCreateView(
@@ -37,27 +37,71 @@ class VideoFragment : Fragment() {
         playBtn = view.findViewById(R.id.video_play)
         pauseBtn = view.findViewById(R.id.video_pause)
         replayBtn = view.findViewById(R.id.video_replay)
-        videoPath = view.findViewById(R.id.video_path)
+        fileTitle = view.findViewById(R.id.file_title)
         videoPathIsPlaying = view.findViewById(R.id.video_path_is_playing)
         return view
     }
 
-    private fun loadResource() {
-        // 默认的的视频资源路径是 /Pictures/movie.mp4   文件名是movie格式是mp4
-        val videoPath = Environment.getExternalStorageDirectory().path + videoPath.text
-        videoView.setVideoPath(videoPath)
-        // 将当前正在播放的视频路径显示在界面上
-        val stringBuilder = StringBuilder("当前播放:")
-        stringBuilder.append(videoPath)
-        videoPathIsPlaying.text = stringBuilder.toString()
+    private fun findVideoPathByTitle(title: String): String? {
+        var videoPath: String? = null
+        val contentResolver = context?.contentResolver
+        contentResolver?.let {
+            // 执行SQL:   select _data from Video文件表 where title='xxx'
+            val cursor =
+                it.query(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    arrayOf("_data"),
+                    "title=?",
+                    arrayOf(title),
+                    null
+                )
+            if (cursor?.moveToFirst() == true) {
+                // 如果找到了该文件
+                videoPath = cursor.getString(0)
+            }
+            cursor?.close()
+        }
+        return videoPath
+    }
 
+    private fun loadResource() {
+        // 默认的的视频资源路径是 内部存储 /Pictures/movie.mp4   文件标题是movie 格式是mp4
+        // val videoPath = Environment.getExternalStorageDirectory().path + videoPath.text
+
+        // 上面的写法过时了，推荐 MediaStore Api, 改用下面数据库查询的方式找到视频文件
+        val videoPath = findVideoPathByTitle(fileTitle.text.toString())
+        if (videoPath != null) {
+            videoView.setVideoPath(videoPath)
+            // 将当前正在播放的视频路径显示在界面上
+            val stringBuilder = StringBuilder("当前播放:")
+            stringBuilder.append(videoPath)
+            videoPathIsPlaying.text = stringBuilder.toString()
+        } else {
+            "/Pictures /Movies /Documents /Download... 这些公共媒体目录中都找不到标题为${fileTitle.text}的视频文件".showToast()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        //  显示视频进度控制栏
+        videoView.setMediaController(MediaController(activity))
+        //  解决只有声音没有图像的问题 https://www.jianshu.com/p/b8c060ce50b0
+        videoView.setZOrderOnTop(true)
+
         // 加载新视频资源
         loadBtn.setOnClickListener {
-            loadResource()
+            // 如果把资源放在SD卡上，需要判断是否有 WRITE_EXTERNAL_STORAGE权限才能播放视频
+            activity?.let {
+                val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+                val result = ContextCompat.checkSelfPermission(it, permission)
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    val arr = arrayOf(permission)
+                    ActivityCompat.requestPermissions(it, arr, 1)
+                } else {
+                    loadResource()
+                    videoView.start()
+                }
+            }
         }
         // 播放
         playBtn.setOnClickListener {
@@ -77,23 +121,6 @@ class VideoFragment : Fragment() {
                 videoView.resume()
             }
         }
-
-        // 如果把资源放在SD卡上，需要判断是否有 WRITE_EXTERNAL_STORAGE权限才能播放视频
-        activity?.let {
-            val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-            val result = ContextCompat.checkSelfPermission(it, permission)
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                val arr = arrayOf(permission)
-                ActivityCompat.requestPermissions(it, arr, 1)
-            } else {
-                loadResource()
-                videoView.start()
-            }
-        }
-        //  显示视频进度控制栏
-        videoView.setMediaController(MediaController(activity))
-        //  解决只有声音没有图像的问题 https://www.jianshu.com/p/b8c060ce50b0
-        videoView.setZOrderOnTop(true)
     }
 
     // 申请完权限之后

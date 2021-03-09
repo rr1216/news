@@ -108,16 +108,19 @@ class NewsFragment(private var newType: String) : Fragment() {
     inner class NewsAdapter(private val newsList: List<News>) :
         RecyclerView.Adapter<NewsAdapter.BaseViewHolder>() {
 
+        // 新闻列表项基类(无论是哪种类型的新闻列表项，都有标题和描述)
         open inner class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val title: TextView = itemView.findViewById(R.id.news_title)
             val description: TextView = itemView.findViewById(R.id.news_desc)
         }
 
+        // 只有一张图片的新闻列表项
         inner class OneImageViewHolder(itemView: View) : BaseViewHolder(itemView) {
             val image: com.makeramen.roundedimageview.RoundedImageView =
                 itemView.findViewById(R.id.news_image)
         }
 
+        // 有三张图片的新闻列表项
         inner class ThreeImagesViewHolder(itemView: View) : BaseViewHolder(itemView) {
             val image1: com.makeramen.roundedimageview.RoundedImageView =
                 itemView.findViewById(R.id.news_image_1)
@@ -127,7 +130,7 @@ class NewsFragment(private var newType: String) : Fragment() {
                 itemView.findViewById(R.id.news_image_3)
         }
 
-        // 判断第position条新闻应该用哪一种列表项展示
+        // 判断第position条新闻应该用哪一种列表项展示，即返回viewType
         override fun getItemViewType(position: Int): Int {
             val news = newsList[position]
             return if (news.thumbnail_pic_s02 == null || news.thumbnail_pic_s03 == null) {

@@ -99,7 +99,16 @@ A: 添加属性  app:tabMode="scrollable"  让标签栏能横向滑动
 
 
 Q: **如何实现BiliBili安卓客户端的上滑自动隐藏标题栏效果？**  
-A: 使用 CoordinatorLayout + AppBarLayout + app:layout_scrollFlags +  app:layout_behavior 实现标题栏与新闻列表的联动效果    
+A: 使用 CoordinatorLayout + AppBarLayout + app:layout_scrollFlags +  app:layout_behavior 实现标题栏与新闻列表的联动效果
+
+
+
+
+Q: **如何播放视频？**
+A: android 原生的 VideoView 控件，或者开源库 https://github.com/google/ExoPlayer.git
+
+
+
 
 
 
