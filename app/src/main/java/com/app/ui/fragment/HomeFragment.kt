@@ -75,8 +75,8 @@ class HomeFragment : Fragment() {
         }
 
         // 向fragmentList添加一堆不同类别的新闻碎片对象
-        for (newsType in newsTypeList) {
-            fragmentList.add(NewsFragment(newsType))
+        for (i in newsTypeList.indices) {
+            fragmentList.add(NewsFragment(newsTypeList[i], titleList[i]))
         }
 
         // 设置缓存数量！！！！！

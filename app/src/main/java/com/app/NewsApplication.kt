@@ -3,8 +3,9 @@ package com.app
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import org.litepal.LitePalApplication
 
-class NewsApplication : Application() {
+class NewsApplication : LitePalApplication() {
     companion object {
         // 别担心，用全局的context不会内存泄露
         @SuppressLint("StaticFieldLeak")
@@ -15,7 +16,7 @@ class NewsApplication : Application() {
         // 否则获取不到新闻数据
 
         // 示例  const val KEY = "b4************************037"
-        const val KEY = 
+        const val KEY =
     }
 
     override fun onCreate() {

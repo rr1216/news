@@ -21,8 +21,12 @@
         <activity android:name=".ui.activity.DetailActivity" />
         <activity android:name=".ui.activity.SearchActivity" />
     </application>
-
+    <!--获取网络信息-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--访问网络-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--访问SD卡-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
 </manifest>
