@@ -110,7 +110,7 @@ A: android 原生的 VideoView 控件,我在第二个测试页面写了一个Vid
 
 
 
-Q: **如何使用数据库缓存数据? **  
+Q: **如何使用数据库缓存数据?**  
 A: android可以使用SQLite数据库储存一些关系型的数据。  
 这里尝试使用了郭神的开源库 LitePal 简化数据库的操作 ，见   https://github.com/guolindev/LitePal.git 详细的中文文档     https://blog.csdn.net/guolin_blog/category_9262963.html    
 使用非常方便，个人感觉比Room的开发体验还要好，强烈推荐，（注意：部分API发生了变化例如DataSupport  改成了  LitePalSupport   
@@ -118,7 +118,7 @@ A: android可以使用SQLite数据库储存一些关系型的数据。
 
 
 
-Q: **这个新闻App还有什么可以实现的? **     
+Q: **这个新闻App还有什么可以实现的?**     
 A:由于缺乏后端支持，很多功能都实现不了，只能写一下界面。但是可以利用SQLite数据库实现一些本地功能例如浏览历史记录，其它更复杂的功能可以尝试写一下后端代码。  
 这个App用到的技术都挺基础的，可以尝试用一下其它知识，例如用retrofit替换Okhttp，用其它方式实现底部导航栏页面切换功能，使用LiveData,...或者整个改成MVVM架构          
 下次重构打算尝试一下 Jetpack Compose ，继续努力吧      
