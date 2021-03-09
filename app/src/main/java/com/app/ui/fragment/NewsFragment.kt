@@ -95,17 +95,13 @@ class NewsFragment(private var newType: String, private var category: String) : 
     }
 
     private fun refresh() {
-        // (1)先清空已有的数据
-        val preSize = newsList.size
-        newsList.clear()
-        newsRecyclerView.adapter?.notifyItemRangeRemoved(0, preSize)
         val data = ArrayList<News>()
         // 访问数据库也是耗时操作，放在子线程中
         thread {
             // (2)再加入数据库中的最多30条数据
             data.addAll(getDataFromDatabase())
             // (3)如果网络可用,通过网络请求获取最新的数据
-            val networkAvailable = isNetworkAvailable(context)
+            val networkAvailable = isNetworkAvailable(NewsApplication.context)
             if (networkAvailable) {
                 val dataFromNetwork = getDataFromNetwork()
                 if (dataFromNetwork != null && dataFromNetwork.isNotEmpty()) {
@@ -118,13 +114,17 @@ class NewsFragment(private var newType: String, private var category: String) : 
                         }
                     }
                 }
-            }
-            newsList.addAll(data)
-            activity?.runOnUiThread {
-                newsRecyclerView.adapter?.notifyItemRangeInserted(0, data.size)
-                if (!networkAvailable) {
+            } else {
+                activity?.runOnUiThread {
                     "网络不可用".showToast()
                 }
+            }
+            activity?.runOnUiThread {
+                val preSize = newsList.size
+                newsList.clear()
+                newsRecyclerView.adapter?.notifyItemRangeRemoved(0, preSize)
+                newsList.addAll(data)
+                newsRecyclerView.adapter?.notifyItemRangeInserted(0, data.size)
             }
         }
     }
