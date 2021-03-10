@@ -10,13 +10,14 @@
         android:layout_height="wrap_content">
 
         <!-- app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" 让弹出的菜单背景为浅(白)色-->
-        <!-- android:theme="@style/ThemeOverlay.MaterialComponents.Dark" 让标题栏的背景为深色，文字颜色为浅(白)色-->
+        <!-- android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" 让标题栏的背景为深色，文字颜色为浅(白)色-->
+        <!-- https://blog.csdn.net/lovejjfg/article/details/50117543   将小箭头调成亮白色  -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/detail_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="#1976D2"
-            android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light">
 
             <!-- android:layout_gravity="center" 水平居中 + 垂直居中-->
