@@ -28,7 +28,6 @@ import kotlin.concurrent.thread
 class NewsFragment(private var newType: String, private var category: String) : Fragment() {
     // newType是拼音 用于url ,  category是汉字 用于sql
 
-
     private lateinit var newsRecyclerView: RecyclerView
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -48,7 +47,7 @@ class NewsFragment(private var newType: String, private var category: String) : 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        //
+
         newsRecyclerView.layoutManager = LinearLayoutManager(NewsApplication.context)
         newsRecyclerView.adapter = NewsAdapter(newsList)
 
@@ -78,11 +77,7 @@ class NewsFragment(private var newType: String, private var category: String) : 
                 if (dataFromNetwork != null && dataFromNetwork.isNotEmpty()) {
                     // 如果成功从网络获取到多条新数据,就立即刷新到UI上
                     activity?.runOnUiThread {
-                        val preSize = newsList.size
-                        newsList.clear()
-                        newsRecyclerView.adapter?.notifyItemRangeChanged(0, preSize)
-                        newsList.addAll(dataFromNetwork)
-                        newsRecyclerView.adapter?.notifyItemRangeChanged(0, dataFromNetwork.size)
+                        replaceDataInRecyclerView(dataFromNetwork)
                         // 将数据缓存到数据库中,耗时操作单独开一个子线程
                         thread {
                             insertNewsToDataBase()
@@ -91,12 +86,9 @@ class NewsFragment(private var newType: String, private var category: String) : 
                 } else {
                     // 如果从网络获取到 0条数据，改从本地数据库中获取数据
                     val dataFromDatabase = getDataFromDatabase()
+                    // 刷新UI
                     activity?.runOnUiThread {
-                        val preSize = newsList.size
-                        newsList.clear()
-                        newsRecyclerView.adapter?.notifyItemRangeChanged(0, preSize)
-                        newsList.addAll(dataFromDatabase)
-                        newsRecyclerView.adapter?.notifyItemRangeChanged(0, dataFromDatabase.size)
+                        replaceDataInRecyclerView(dataFromDatabase)
                     }
                 }
             }
@@ -104,13 +96,10 @@ class NewsFragment(private var newType: String, private var category: String) : 
             // 如果网络不可用,只能从数据库中获取数据
             thread {
                 val dataFromDatabase = getDataFromDatabase()
+                // 刷新UI
                 activity?.runOnUiThread {
                     "网络不可用".showToast()
-                    val preSize = newsList.size
-                    newsList.clear()
-                    newsRecyclerView.adapter?.notifyItemRangeChanged(0, preSize)
-                    newsList.addAll(dataFromDatabase)
-                    newsRecyclerView.adapter?.notifyItemRangeChanged(0, dataFromDatabase.size)
+                    replaceDataInRecyclerView(dataFromDatabase)
                 }
             }
         }
@@ -208,5 +197,13 @@ class NewsFragment(private var newType: String, private var category: String) : 
         } else {
             JuHeKEY(1, NewsApplication.KEY, 1).save()
         }
+    }
+
+    private fun replaceDataInRecyclerView(newData: List<News>) {
+        val preSize = newsList.size
+        newsList.clear()
+        newsRecyclerView.adapter?.notifyItemRangeChanged(0, preSize)
+        newsList.addAll(newData)
+        newsRecyclerView.adapter?.notifyItemRangeChanged(0, newData.size)
     }
 }
