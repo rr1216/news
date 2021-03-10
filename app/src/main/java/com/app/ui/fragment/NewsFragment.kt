@@ -80,9 +80,9 @@ class NewsFragment(private var newType: String, private var category: String) : 
                     activity?.runOnUiThread {
                         val preSize = newsList.size
                         newsList.clear()
-                        newsRecyclerView.adapter?.notifyItemRangeRemoved(0, preSize)
+                        newsRecyclerView.adapter?.notifyItemRangeChanged(0, preSize)
                         newsList.addAll(dataFromNetwork)
-                        newsRecyclerView.adapter?.notifyItemRangeInserted(0, dataFromNetwork.size)
+                        newsRecyclerView.adapter?.notifyItemRangeChanged(0, dataFromNetwork.size)
                         // 将数据缓存到数据库中,耗时操作单独开一个子线程
                         thread {
                             insertNewsToDataBase()
@@ -94,9 +94,9 @@ class NewsFragment(private var newType: String, private var category: String) : 
                     activity?.runOnUiThread {
                         val preSize = newsList.size
                         newsList.clear()
-                        newsRecyclerView.adapter?.notifyItemRangeRemoved(0, preSize)
+                        newsRecyclerView.adapter?.notifyItemRangeChanged(0, preSize)
                         newsList.addAll(dataFromDatabase)
-                        newsRecyclerView.adapter?.notifyItemRangeInserted(0, dataFromDatabase.size)
+                        newsRecyclerView.adapter?.notifyItemRangeChanged(0, dataFromDatabase.size)
                     }
                 }
             }
@@ -108,9 +108,9 @@ class NewsFragment(private var newType: String, private var category: String) : 
                     "网络不可用".showToast()
                     val preSize = newsList.size
                     newsList.clear()
-                    newsRecyclerView.adapter?.notifyItemRangeRemoved(0, preSize)
+                    newsRecyclerView.adapter?.notifyItemRangeChanged(0, preSize)
                     newsList.addAll(dataFromDatabase)
-                    newsRecyclerView.adapter?.notifyItemRangeInserted(0, dataFromDatabase.size)
+                    newsRecyclerView.adapter?.notifyItemRangeChanged(0, dataFromDatabase.size)
                 }
             }
         }
