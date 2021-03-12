@@ -19,33 +19,44 @@ import java.lang.StringBuilder
 class NewsAdapter(private val newsList: List<News>, private val newsFragment: NewsFragment) :
     RecyclerView.Adapter<NewsAdapter.BaseViewHolder>() {
     companion object {
-        // 两种不同的新闻列表项
+        // 三种不同的列表项:两种新闻列表项 + 底部列表项footer_view
         const val ONE_IMAGE_VIEW_TYPE = 1
         const val THREE_IMAGES_VIEW_TYPE = 3
-
-        // footer_view 用于滑动到底部加载更多
         const val FOOTER_VIEW_TYPE = -1
 
         // 定义 footer_view的几种可能状态
+        /**
+         * HAS_MORE状态：footer_view 的进度条转圈,可执行 loadCacheData()
+         */
         const val HAS_MORE = 996
+
+        /**
+         * FINISHED状态：footer_view 显示"已经没有更多内容了",不可执行 loadCacheData()
+         */
         const val FINISHED = 997
+
+        /**
+         * FAILED状态：footer_view 显示"加载失败,点击重新加载",不可执行 loadCacheData()
+         */
         const val FAILED = 998
     }
 
+    /**
+     * footer_view的当前状态
+     */
     var footerViewStatus: Int = HAS_MORE
 
     // 列表项中增加了一个 footer_view,因此要+1
     override fun getItemCount(): Int = newsList.size + 1
 
-    // 判断第position条新闻应该用哪一种列表项展示，即返回viewType
+    // 判断第position条新闻应该用哪一种列表项展示，返回viewType
     override fun getItemViewType(position: Int): Int {
-        if (position == newsList.size) {
+        if (position == itemCount - 1) {
             // 最后一个列表项放 footer_view
             return FOOTER_VIEW_TYPE
         } else {
             val news = newsList[position]
-            // news.thumbnail_pic_s02 == "null"必不可少
-            // 因为有些离谱的库会把 null序列化为"null"
+            // news.thumbnail_pic_s02 == "null"必不可少 因为有些离谱的库会把 null序列化为"null"
             return if (news.thumbnail_pic_s02 == null
                 || news.thumbnail_pic_s02 == ""
                 || news.thumbnail_pic_s02 == "null"
@@ -85,7 +96,7 @@ class NewsAdapter(private val newsList: List<News>, private val newsFragment: Ne
         }
     }
 
-    // 将数据展示在列表项中
+    // 将数据展示在列表项中,即刷新列表项的UI
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         if (holder is NewsViewHolder) {
             val news = newsList[position]

@@ -47,26 +47,23 @@ class VideoFragment : Fragment() {
         val contentResolver = context?.contentResolver
         contentResolver?.let {
             // 执行SQL:   select _data from Video文件表 where title='xxx'
+            val tableName = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
             val cursor =
-                it.query(
-                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                    arrayOf("_data"),
-                    "title=?",
-                    arrayOf(title),
-                    null
-                )
-            if (cursor?.moveToFirst() == true) {
-                // 如果找到了该文件
-                videoPath = cursor.getString(0)
+                it.query(tableName, arrayOf("_data"), "title=?", arrayOf(title), null)
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    // 如果找到了该文件
+                    videoPath = cursor.getString(0)
+                }
+                cursor.close()
             }
-            cursor?.close()
         }
         return videoPath
     }
 
     private fun loadResource() {
-        // 默认的的视频资源路径是 内部存储 /Pictures/movie.mp4   文件标题是movie 格式是mp4
-        // val videoPath = Environment.getExternalStorageDirectory().path + videoPath.text
+        // 测试用的的的视频资源路径是 内部存储 /Pictures/movie.mp4   文件标题是movie 格式是mp4
+        // val videoPath = Environment.getExternalStorageDirectory().path + 文件名
 
         // 上面的写法过时了，推荐 MediaStore Api, 改用下面数据库查询的方式找到视频文件
         val videoPath = findVideoPathByTitle(fileTitle.text.toString())
