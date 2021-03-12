@@ -1,7 +1,6 @@
 package com.app
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import org.litepal.LitePalApplication
 
@@ -16,7 +15,7 @@ class NewsApplication : LitePalApplication() {
         // 否则获取不到新闻数据
 
         // 示例  const val KEY = "b4************************037"
-        const val KEY = 
+        const val KEY = "58ff2000704bbf8e31ce031c1b555a33"
     }
 
     override fun onCreate() {

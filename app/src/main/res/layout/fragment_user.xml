@@ -38,35 +38,22 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-
-        <TextView
-
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:text="本机API使用次数:">
-
-        </TextView>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/test_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="点击刷新今天向聚合数据发送网络请求的次数"
+            app:backgroundTint="#40C4FF" />
 
         <TextView
             android:id="@+id/api_use_count"
-            android:layout_width="0dp"
-            android:gravity="center"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-        </TextView>
+            android:layout_width="match_parent"
+            android:textSize="20sp"
+            android:gravity="start"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
-
-
-    <Button
-        android:id="@+id/test_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="点击查看本机向聚合数据发送请求的次数"
-        app:backgroundTint="#40C4FF" />
 
 </LinearLayout>

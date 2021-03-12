@@ -99,10 +99,18 @@
             app:backgroundTint="#1976D2" />
     </LinearLayout>
 
+
+    <TextView
+        android:gravity="start"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="        点击加载，app会在手机外部存储中的公共访问目录(Movie、Music、Pictures、Alarm、DCIM、Ringtones、Download)中查找视频" />
+
+
     <VideoView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 
 </LinearLayout>

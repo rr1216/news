@@ -2,6 +2,8 @@ package com.app.model
 
 import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
+import java.sql.Timestamp
+import java.util.*
 
 data class NewsResponse(
     val reason: String,
@@ -32,10 +34,10 @@ data class News(
 // 为 News添加 LitePal 支持，使之作为一张表存入数据库中
 
 
-// 记录一下发送网络请求的次数
-data class JuHeKEY(
-    // id 默认自增
-    var id: Long = 0,
-    var value: String = "",
-    var count: Long = 0
+// 在数据库中记录一下网络请求的日志
+data class NetWorkLog(
+    // LitePal会自动添加一个自增的id字段
+    val juHeKey: String,
+    val type: String,
+    val timestamp: String // 用字符串存储时间
 ) : LitePalSupport()

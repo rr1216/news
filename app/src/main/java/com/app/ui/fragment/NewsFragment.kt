@@ -1,5 +1,6 @@
 package com.app.ui.fragment
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,26 +14,36 @@ import com.app.model.News
 import com.app.NewsApplication
 import com.app.model.NewsResponse
 import com.app.R
-import com.app.model.JuHeKEY
+import com.app.model.NetWorkLog
 import com.app.ui.adapter.NewsAdapter
+import com.app.ui.adapter.NewsAdapter.Companion.FAILED
+import com.app.ui.adapter.NewsAdapter.Companion.FINISHED
+import com.app.ui.adapter.NewsAdapter.Companion.HAS_MORE
 import com.app.util.isNetworkAvailable
 import com.app.util.showToast
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.litepal.LitePal
-import org.litepal.extension.find
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
+// newType是拼音：用于url ;  category是汉字：用于sql
 class NewsFragment(private var newType: String, private var category: String) : Fragment() {
-    // newType是拼音 用于url ,  category是汉字 用于sql
 
     private lateinit var newsRecyclerView: RecyclerView
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     private val newsList = ArrayList<News>()
+
+    private val newsAdapter = NewsAdapter(newsList, this)
+
+    // 保证 loadNewData() 和 loadCacheData() 这两个函数同一时间只有一个正在执行
+    private var isLoading = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,29 +60,46 @@ class NewsFragment(private var newType: String, private var category: String) : 
         super.onActivityCreated(savedInstanceState)
 
         newsRecyclerView.layoutManager = LinearLayoutManager(NewsApplication.context)
-        newsRecyclerView.adapter = NewsAdapter(newsList)
+        newsRecyclerView.adapter = newsAdapter
 
-        // 创建页面后立即刷新一次页面上的新闻数据
-        refresh()
+        // 功能1:创建页面后立即从网络获取新的数据，并刷新到UI上
+        loadNewData()
 
+        // 功能2:下拉刷新
         swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#03A9F4"))
         swipeRefreshLayout.setOnRefreshListener {
             thread {
-                Thread.sleep(700)
+                Thread.sleep(700) // 这个延迟0.7秒只是为了实现视觉效果，与逻辑无关
                 activity?.runOnUiThread {
-                    refresh()
+                    loadNewData()
+                    // 让圆形进度条停下来
                     swipeRefreshLayout.isRefreshing = false
                 }
             }
-
         }
+
+        //  功能3:滑动到底部加载更多数据，数据来自本地数据库的缓存
+        newsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy < 0) return // 不监听向上滑动的动作，只监听向下滑动的动作
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val position = layoutManager.findLastVisibleItemPosition()
+                if (position == newsAdapter.itemCount - 1) {
+                    // 向下滑动到底部时，立即加载缓存数据
+                    loadCacheData()
+                }
+            }
+        })
     }
 
-    private fun refresh() {
+    private fun loadNewData() {
+        if (isLoading) return
+        isLoading = true
         val networkAvailable = isNetworkAvailable(NewsApplication.context)
         if (networkAvailable) {
             // 如果网络可用,就从网络中获取数据
-            writeLog() // 记录一下聚合数据API的使用次数
+            writeLog() //记录网络请求日志
             thread {
                 val dataFromNetwork = getDataFromNetwork()
                 if (dataFromNetwork != null && dataFromNetwork.isNotEmpty()) {
@@ -82,24 +110,64 @@ class NewsFragment(private var newType: String, private var category: String) : 
                         thread {
                             insertNewsToDataBase()
                         }
+                        newsAdapter.footerViewStatus = HAS_MORE
+                        isLoading = false
                     }
                 } else {
                     // 如果从网络获取到 0条数据，改从本地数据库中获取数据
-                    val dataFromDatabase = getDataFromDatabase()
+                    val dataFromDatabase = getDataFromDatabase(6)
                     // 刷新UI
                     activity?.runOnUiThread {
                         replaceDataInRecyclerView(dataFromDatabase)
+                        newsAdapter.footerViewStatus = HAS_MORE
+                        isLoading = false
                     }
                 }
             }
         } else {
             // 如果网络不可用,只能从数据库中获取数据
             thread {
-                val dataFromDatabase = getDataFromDatabase()
+                val dataFromDatabase = getDataFromDatabase(6)
                 // 刷新UI
                 activity?.runOnUiThread {
                     "网络不可用".showToast()
                     replaceDataInRecyclerView(dataFromDatabase)
+                    newsAdapter.footerViewStatus = HAS_MORE
+                    isLoading = false
+                }
+            }
+        }
+    }
+
+    fun loadCacheData() {
+        if (isLoading) return
+        if (newsAdapter.footerViewStatus != HAS_MORE) return
+        isLoading = true
+        thread {
+            try {
+                Thread.sleep(1000) // 这个延迟1秒只是为了实现视觉效果，与逻辑无关
+                // 注意在缓存时让越早的新闻,id越小
+                val newData = getDataFromDatabase(6, minIdInNewsList() - 1)
+                if (newData.isEmpty()) {
+                    newsAdapter.footerViewStatus = FINISHED
+                    activity?.runOnUiThread {
+                        newsAdapter.notifyItemChanged(newsAdapter.itemCount - 1)
+                        isLoading = false
+                    }
+                } else {
+                    // 将旧数据和新数据合并到一个list中
+                    val list = listOf(newsList, newData).flatten()
+                    activity?.runOnUiThread {
+                        replaceDataInRecyclerView(list)
+                        isLoading = false
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                newsAdapter.footerViewStatus = FAILED
+                activity?.runOnUiThread {
+                    newsAdapter.notifyItemChanged(newsAdapter.itemCount - 1)
+                    isLoading = false
                 }
             }
         }
@@ -153,14 +221,38 @@ class NewsFragment(private var newType: String, private var category: String) : 
         return newsArray
     }
 
-    private fun getDataFromDatabase(limitCount: Int = 30): List<News> {
+    private fun getDataFromDatabase(limitCount: Int = 6, maxId: Long = -10): List<News> {
         // 由于在保存来自网络的数据时将列表翻转了一次，而插入数据库时id是自增的
         // 因此越旧的新闻 id越小
         // 从数据库中按新闻类型(汉字)读取最多30条新闻,按id降序排列
-        return LitePal.where("category=?", category)
-            .order("id desc")
-            .limit(limitCount)
-            .find()
+        return if (maxId < 0) {
+            // 小于 0的id是无意义的，不拼接到 SQL中
+            LitePal.where("category=?", category)
+                .order("id desc")
+                .limit(limitCount)
+                .find(News::class.java)
+        } else {
+            LitePal.where("category=? and id<=?", category, maxId.toString())
+                .order("id desc")
+                .limit(limitCount)
+                .find(News::class.java)
+        }
+    }
+
+    // 获取当前newsList中所有新闻中id的最小值
+    private fun minIdInNewsList(): Long {
+        return if (newsList.isNullOrEmpty()) {
+            -1
+        } else {
+            var minId = newsList[0].id
+            for (i in newsList.indices) {
+                val id = newsList[i].id
+                if (id < minId) {
+                    minId = id
+                }
+            }
+            minId
+        }
     }
 
     @Deprecated(message = "这个函数的设计很糟糕,必须优化一下,以后再说")
@@ -190,20 +282,21 @@ class NewsFragment(private var newType: String, private var category: String) : 
     }
 
     private fun writeLog() {
-        // 记录一下聚合数据API的使用次数
-        val old = LitePal.find(JuHeKEY::class.java, 1)
-        if (old != null) {
-            JuHeKEY(1, NewsApplication.KEY, old.count + 1).update(1)
-        } else {
-            JuHeKEY(1, NewsApplication.KEY, 1).save()
-        }
+        // simpleDateFormat 是线程不安全的，但这里只用于主线程就没问题
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
+        simpleDateFormat.timeZone = TimeZone.getTimeZone("Asia/Shanghai")
+        val netWorkLog = NetWorkLog(NewsApplication.KEY, newType, simpleDateFormat.format(Date()))
+        netWorkLog.save()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun replaceDataInRecyclerView(newData: List<News>) {
-        val preSize = newsList.size
-        newsList.clear()
-        newsRecyclerView.adapter?.notifyItemRangeChanged(0, preSize)
-        newsList.addAll(newData)
-        newsRecyclerView.adapter?.notifyItemRangeChanged(0, newData.size)
+        try {
+            newsList.clear()
+            newsList.addAll(newData)
+            newsAdapter.notifyDataSetChanged()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

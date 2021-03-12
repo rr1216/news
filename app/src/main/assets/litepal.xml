@@ -4,6 +4,6 @@
     <version value="1" />
     <list>
         <mapping class="com.app.model.News" />
-        <mapping class="com.app.model.JuHeKEY"/>
+        <mapping class="com.app.model.NetWorkLog"/>
     </list>
 </litepal>
