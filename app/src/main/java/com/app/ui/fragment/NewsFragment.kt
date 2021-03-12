@@ -28,7 +28,6 @@ import org.litepal.LitePal
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
 // newType是拼音：用于url ;  category是汉字：用于sql

@@ -15,7 +15,7 @@ class NewsApplication : LitePalApplication() {
         // 否则获取不到新闻数据
 
         // 示例  const val KEY = "b4************************037"
-        const val KEY = "58ff2000704bbf8e31ce031c1b555a33"
+        const val KEY = "b4e4872881c15d0f972c336eccab2037"
     }
 
     override fun onCreate() {

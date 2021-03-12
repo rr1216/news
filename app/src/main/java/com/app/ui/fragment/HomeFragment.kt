@@ -17,12 +17,13 @@ import com.app.ui.activity.SearchActivity
 import com.app.util.showToast
 import com.google.android.material.tabs.TabLayout
 import de.hdodenhof.circleimageview.CircleImageView
+import java.util.*
 
 class HomeFragment : Fragment() {
 
     // 类型,shehui(社会),guonei(国内),guoji(国际),yule(娱乐),tiyu(体育)junshi(军事),keji(科技),caijing(财经),shishang(时尚)
-    private val newsTypeList = listOf("shehui", "guoji", "yule", "keji", "tiyu", "shishang")
-    private val titleList = listOf("社会", "国际", "娱乐", "科技", "体育", "时尚")
+    private val newsTypeList = listOf("shehui", "guoji", "yule", "keji", "tiyu", "caijing")
+    private val titleList = listOf("社会", "国际", "娱乐", "科技", "体育", "财经")
 
     // 初始化一个空fragment列表
     private val fragmentList = ArrayList<NewsFragment>()

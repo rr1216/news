@@ -40,6 +40,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
    // implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
+    implementation 'com.github.huangyanbin:SmartTable:2.2.0' // https://juejin.cn/post/6844903560665104391
 
     // Database https://github.com/guolindev/Glance.git  https://github.com/guolindev/LitePal.git
     debugImplementation 'com.glance.guolindev:glance:1.0.0'

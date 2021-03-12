@@ -2,8 +2,6 @@ package com.app.model
 
 import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
-import java.sql.Timestamp
-import java.util.*
 
 data class NewsResponse(
     val reason: String,
