@@ -34,6 +34,8 @@ import kotlin.concurrent.thread
  * 新闻碎片：newType是拼音,用于url  category是汉字,用于sql
  */
 class NewsFragment(private var newType: String, private var category: String) : Fragment() {
+    // 注意:通过构造方法为Fragment传递参数很不优雅，在Fragment restore的时候就会丢失参数。
+    // 一般推荐通过将参数设置到Bundle里面，然后调用fragment.setArguments方法传递参数，这样可以保证系统恢复Fragment是还能拿到传入的参数。
 
     private lateinit var newsRecyclerView: RecyclerView
 

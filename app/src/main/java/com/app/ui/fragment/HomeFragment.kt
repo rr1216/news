@@ -83,7 +83,9 @@ class HomeFragment : Fragment() {
         // 设置缓存数量！！！！！
         viewPager.offscreenPageLimit = titleList.size
         // 将fragmentList里面的fragment放进viewPager里面，从而渲染到视图上
-        viewPager.adapter = activity?.supportFragmentManager?.let { Adapter(it) }
+        // viewPager.adapter = activity?.supportFragmentManager?.let { Adapter(it) }
+        // 这里不应该使用 supportFragmentManager , 而是用 childFragmentManager 见 https://blog.csdn.net/allan_bst/article/details/64920076
+        viewPager.adapter = Adapter(childFragmentManager)
 
         // 实现viewPager左右滑动与tabLayout这个标签选择器的联动
         tabLayout.setupWithViewPager(viewPager)
