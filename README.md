@@ -149,7 +149,11 @@ A:由于缺乏后端支持，很多功能都实现不了，只能写一下界面
 
 
 ### 未完成的地方
-- 使用MVVM架构        
+- ~~使用MVVM架构~~    
+
+- MVVM版本的新闻App见  https://github.com/hjzf/news-mvvm.git
+
+     
 
 
 
