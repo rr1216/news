@@ -56,9 +56,11 @@ dependencies {
 
 ## 遇到的问题:
 Q: **Context类型参数怎么填？**  
-A: 方案一 ，MainActivity 本身就是一个Context，直接填  this 或者  this@MainActivity  
-    方案二 ， parent.context  (在Adapter中使用这个方案，parent是一个viewGroup)  
-    方案三 ， MyApplication.context  ，这是最终的解决方案
+A: 方案一 ，MainActivity 本身就是一个Context，直接填  this 或者  this@MainActivity       
+
+方案二 ， parent.context  (在Adapter中使用这个方案，parent是一个viewGroup)               
+
+方案三 ， MyApplication.context  ，这是最终的解决方案  
 
 
 
@@ -68,8 +70,16 @@ A: 方案一 ，自定义一个 NoScrollViewPager
 
 
 Q: **ViewPager在跨页切换时，会出现多页闪烁的问题**   
-A: 方案一 ，使用 ViewPager.setCurrentItem(0, false)       代替     ViewPager.setCurrentItem(0)      即添加一个参数false  
-方案二，自定义一个 NewsViewPager ，这个方案用在了 TabLayout与新闻列表ViewPager的联动上  
+A: 方案一 ，使用 ` ViewPager.setCurrentItem(0, false)  `     代替     `ViewPager.currentItem = 0  `    即添加一个参数`false`  
+方案二，自定义一个 NewsViewPager ，这个方案用在了 TabLayout与新闻列表ViewPager的联动上    
+
+
+
+Q:**代码中还有哪些没来得及修改的缺陷?**     
+A: 这些代码要改一下：
+
+ - 在HomeFragment中，要将  `viewPager.adapter = activity?.supportFragmentManager?.let { Adapter(it) } `  改成 ` viewPager.adapter = Adapter(childFragmentManager) ` 具体原因见 https://blog.csdn.net/allan_bst/article/details/64920076      
+ - 在Fragment中，不能通过构造函数传递参数，原因请自行搜索。具体修改方法 https://www.jianshu.com/p/3600b5c2f668  ，kotlin版本的做法见 https://github.com/hjzf/news-mvvm/blob/master/app/src/main/java/com/hjzf/ui/news/NewsFragment.kt   
 
 
 
@@ -120,9 +130,8 @@ A: android可以使用SQLite数据库储存一些关系型的数据。
 
 Q: **这个新闻App还有什么可以实现的?**     
 A:由于缺乏后端支持，很多功能都实现不了，只能写一下界面。但是可以利用SQLite数据库实现一些本地功能例如浏览历史记录，其它更复杂的功能可以尝试写一下后端代码。  
-这个App用到的技术都挺基础的，可以尝试用一下其它知识，例如用retrofit替换Okhttp，用其它方式实现底部导航栏页面切换功能，使用LiveData,...或者整个改成MVVM架构          
-下次重构打算尝试一下 Jetpack Compose ，继续努力吧      
-
+这个App用到的技术非常基础，可以尝试用一下新知识，例如用retrofit替换Okhttp，用其它方式实现底部导航栏页面切换功能，使用LiveData,...或者整个改成MVVM架构，见https://github.com/hjzf/news-mvvm.git           
+下次重构打算尝试一下 Jetpack Compose ，继续努力吧       
 
 
 
