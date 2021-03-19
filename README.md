@@ -139,11 +139,11 @@ app:itemRippleColor="@color/transparent"
 
 
 ###  **6.  如何在RecyclerView中展示多种菜单项，比如有三张图片的新闻列表项？以及上拉加载更多的footer_view?**  
-**步骤一：**在适配器中重写 getItemViewType(position: Int) 函数，判断第position条新闻应该用哪一种列表项展示，返回viewType常量，  
+**步骤一:**在适配器中重写 getItemViewType(position: Int) 函数，判断第position条新闻应该用哪一种列表项展示，返回viewType常量，              
 
-**步骤二：**在 onCreateViewHolder 中 根据不同的viewType加载不同的列表项布局并创建对应类型的ViewHolder   
+**步骤二:**在 onCreateViewHolder 中 根据不同的viewType加载不同的列表项布局并创建对应类型的ViewHolder         
 
-**步骤三：**最后在onBindViewHolder 中根据不同的ViewHolder类型进行数据绑定 。    
+**步骤三:**最后在onBindViewHolder 中根据不同的ViewHolder类型进行数据绑定 。       
 
 见 https://github.com/hjzf/news/blob/master/app/src/main/java/com/app/ui/adapter/NewsAdapter.kt
 
