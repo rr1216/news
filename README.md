@@ -5,7 +5,8 @@ git clone https://github.com/hjzf/news.git
 ## 项目描述:
 一个Android开发基础学习阶段的新闻App实战项目
 
-![效果图见README.assets/test.png](https://gitee.com/ashinigit/news/raw/main/README.assets/test.png)
+![](./screenshots/test.png)    
+![](./screenshots/test_1.png)
 
 ## 开发思路:
 ### 设计的缺陷1: 只能显示一条新闻(即写在布局文件中的那一条特定的新闻)
